@@ -1,0 +1,129 @@
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+ .wrapper {
+   font-family: 'Inter', sans-serif !important;
+   position: fixed;
+   background-color: white;
+   color: black;
+   display: flex;
+   border-radius: 15px;
+   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+   overflow: hidden;
+   z-index: 99999;
+   cursor: default;
+   transition: opacity .5s ease-in;
+ }
+
+ .pop-left {
+   width: 50%;
+   padding: 24px;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   background-color: white;
+ }
+
+ .pop-right {
+   width: 50%;
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center;
+   position: relative;
+ }
+
+ .text-header {
+   overflow-wrap: break-word;
+   font-weight: 700;
+ }
+
+ .text-subheader {
+   overflow-wrap: break-word;
+   font-weight: 500;
+ }
+
+ .form {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+ }
+
+ .name-input-wrapper,
+ .mail-input-wrapper {
+   display: flex;
+   align-items: center;
+   width: 100%;
+   font-size: 14px;
+ }
+
+ #fullname,
+ #email {
+   padding: 8px;
+   width: 100%;
+   border: 2px solid darkgray;
+   border-radius: 6px;
+   font-family: 'Inter', sans-serif !important;
+ }
+
+ #fullname::placeholder,
+ #email::placeholder {
+   color: darkgray;
+ }
+
+ .submitBtn {
+   font-size: 14px;
+   transition: all .3s ease-in-out;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: white;
+   padding: 10px 8px;
+   border-radius: 8px;
+   cursor: pointer;
+   border: none;
+   font-family: 'Inter', sans-serif !important;
+ }
+
+ .submitBtn:hover {
+   filter: brightness(1.25);
+ }
+
+ .submitBtn:active {
+   transform: scale(0.95);
+ }
+
+ .sub-buttons {
+   display: flex;
+   width: 100%;
+   justify-content: space-between;
+   font-size: 12px;
+ }
+
+ .subBtn {
+   cursor: pointer;
+   transition: all .2s ease-in-out;
+ }
+
+ .subBtn:hover {
+   text-decoration: underline;
+ }
+
+ .closeBtn {
+   position: absolute;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   top: 5%;
+   right: 6%;
+   color: black;
+   opacity: 0.4;
+   cursor: pointer;
+   border: 2px solid black;
+   border-radius: 50%;
+   width: 24px;
+   height: 24px;
+   font-weight: 700;
+ }
+
+ .closeBtn:hover {
+   transform: scale(1.03);
+ }
