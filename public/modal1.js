@@ -79,14 +79,14 @@ style.innerHTML = `
     width:100%;
     font-size: 14px;
   }
-  #fullname,#email{
+  #popup-fullname,#popup-email{
     padding: 8px;
     width:100%;
     border: 2px solid darkgray;
     border-radius: 6px ;
     font-family: 'Inter', sans-serif !important;
   }
-  #fullname:focus,#email:focus{
+  #popup-fullname:focus,#popup-email:focus{
     outline-color:${colorCheck(content.color)};
   }
   #fullname::placeholder,#email::placeholder {
@@ -157,10 +157,10 @@ style.innerHTML = `
         </div>
         <form id="validate" class="form">
           <div class="name-input-wrapper">
-            <input id="fullname" type="text" placeholder="${content.inputText1}" />
+            <input id="popup-fullname" type="text" placeholder="${content.inputText1}" />
           </div>
           <div class="mail-input-wrapper">
-            <input id="email" type="text" placeholder="${content.inputText2}" />
+            <input id="popup-email" type="text" placeholder="${content.inputText2}" />
           </div>
           <button type='submit' id="submitButton" class="submitBtn">
             ${content.buttonText}
@@ -179,8 +179,8 @@ style.innerHTML = `
   let closeButton = document.getElementById('closeButton')
   closeButton.addEventListener('click', () => { popDisplay = 'none'; Pop() })
   let submitButton = document.getElementById('submitButton')
-  let fullName = document.getElementById('fullname')
-  let email = document.getElementById('email')
+  let fullName = document.getElementById('popup-fullname')
+  let email = document.getElementById('popup-email')
   var currentTime = new Date();
   currentTime.toLocaleString();       // -> "2/1/2013 7:37:08 AM"
   let handleForm = document.getElementById('validate')
@@ -204,7 +204,6 @@ style.innerHTML = `
       submitButton.style.backgroundColor = 'red'
       submitButton.innerText = 'Invalid Info'
     } else {
-      if(content.webhookURL.url.length>0)
       var formData = new XMLHttpRequest();
       formData.open("POST", content.webhookURL.url, true);
       formData.setRequestHeader('Content-Type', 'application/json');
@@ -370,13 +369,13 @@ function popUpDisplayer() {
   if ("trafficSourceDomain" in newObj) currentObj.trafficSourceDomain = newObj.trafficSourceDomain
   if ("browserLanguages" in newObj) currentObj.browserLanguages = newObj.browserLanguages
   if ("exitIntentTargeting" in newObj) currentObj.exitIntentTargeting = newObj.exitIntentTargeting
-  if ("webhookURL" in newObj) currentObj.webhookURL = newObj.webhookURL
+  if ("webhookURL" in newObj) {if(newObj.webhookURL.url) currentObj.webhookURL = newObj.webhookURL}
   
   var displayOnce = true
 
   function PopupDisplayFunction() {
-    if (newObj.afterXSecond > 0 && newObj.afterXScroll === '') setTimeout(() => { popUpDisplayer() }, popSecond * 1000)
-    else if (newObj.afterXSecond === '' && newObj.afterXScroll > 0) {
+    if (currentObj.afterXSecond > 0 && currentObj.afterXScroll === '') setTimeout(() => { popUpDisplayer() }, popSecond * 1000)
+    else if (currentObj.afterXSecond === '' && currentObj.afterXScroll > 0) {
       if (isNaN(getScrollPercent())) setTimeout(() => { popUpDisplayer() }, 300) // This is for only 100 viewheight(vh) websites.
       window.onscroll = function () {
         let value = getScrollPercent()
@@ -386,7 +385,7 @@ function popUpDisplayer() {
         }
       }
     }
-    else if (newObj.afterXSecond > 0 && newObj.afterXScroll > 0) {
+    else if (currentObj.afterXSecond > 0 && currentObj.afterXScroll > 0) {
       if (isNaN(getScrollPercent())) setTimeout(() => { popUpDisplayer(); displayOnce = false }, 300) // This is for only 100 viewheight(vh) websites.
       window.onscroll = function () {
         let value = getScrollPercent()
@@ -403,14 +402,17 @@ function popUpDisplayer() {
   }
   let langArray = getBrowserLanguageAsArray(currentObj.browserLanguages)
   let userLanguage = getLanguage()
-  if (currentObj.browserLanguages.length > 0) {
-    if (langArray.includes(userLanguage)) {
-      if (currentObj.targetPhone) { if (screen.width <= 975) PopupDisplayFunction() }
-      else if (currentObj.targetLaptop) { if (screen.width > 975) PopupDisplayFunction() }
-      else PopupDisplayFunction()
+    if (currentObj.browserLanguages.length > 0) {
+      if (langArray.includes(userLanguage)) {
+        if (currentObj.targetPhone) { if (screen.width <= 975) PopupDisplayFunction() }
+        else if (currentObj.targetLaptop) { if (screen.width > 975) PopupDisplayFunction() }
+        else PopupDisplayFunction()
+      }
+    }else {
+        if (currentObj.targetPhone) { if (screen.width <= 975) PopupDisplayFunction() }
+        else if (currentObj.targetLaptop) { if (screen.width > 975) PopupDisplayFunction() }
+        else PopupDisplayFunction()
     }
-  }
-  else PopupDisplayFunction()
 }
 
 function getBrowserLanguageAsArray(languageArray) {
@@ -450,14 +452,3 @@ function getBrowserLanguageAsArray(languageArray) {
   }
   return lastLanguageArray
 }
-  
-
-customizePopup({
-  // afterXSecond: '4',
-  // afterXScroll: '50',
-  // targetPhone: false,
-  // targetLaptop: false,
-  // webhookURL: 'https://hook.eu1.make.com/87iduve501h7aul8rzna6nupqh2amrzo',
-  // browserLanguages: [],
-}, content)
-
