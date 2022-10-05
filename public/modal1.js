@@ -20,6 +20,7 @@ let content = {
 }
 let popDisplay = 'none'
 let popOpacity = '0'
+let clickDataArray = []
 function Pop() {
 
 let container = document.createElement('div');
@@ -215,7 +216,7 @@ style.innerHTML = `
         browserName: detectBrowser(),
         deviceType: getDeviceType(),
         selectedValue: '',
-        clickData:clickData()
+        clickData:clickDataArray
       }));
       fullName.style.borderColor = 'lightgreen'
       email.style.borderColor = 'lightgreen'
@@ -225,14 +226,16 @@ style.innerHTML = `
     }
   })
 }
-function clickData() {
-  document.onclick= function(event) {
-    if (event===undefined) event= window.event;
-    var target= 'target' in event? event.target : event.srcElement;
-
-      return target.tagName
-  };
+function clickData(info) {
+  if (info) {
+    document.onclick= function(event) {
+      if (event===undefined) event= window.event;
+      var target= 'target' in event? event.target : event.srcElement;
+      clickDataArray.push(target.tagName)
+    }
+  }
 }
+
 const getLanguage = () => {
   var language = window.navigator.userLanguage || window.navigator.language;
   return language
@@ -349,9 +352,10 @@ function getScrollPercent() {
 function popUpDisplayer() {
   popDisplay = 'flex'
   popOpacity = '1'
+  clickData(content.webhookURL.clickData)
   Pop()
 }
-  function customizePopup(newObj, currentObj) {
+function customizePopup(newObj, currentObj) {
   if ("size" in newObj) currentObj.size = newObj.size
   if ("position" in newObj) currentObj.position = newObj.position
   if ("color" in newObj) currentObj.color = newObj.color
@@ -369,7 +373,14 @@ function popUpDisplayer() {
   if ("trafficSourceDomain" in newObj) currentObj.trafficSourceDomain = newObj.trafficSourceDomain
   if ("browserLanguages" in newObj) currentObj.browserLanguages = newObj.browserLanguages
   if ("exitIntentTargeting" in newObj) currentObj.exitIntentTargeting = newObj.exitIntentTargeting
-  if ("webhookURL" in newObj) {if(newObj.webhookURL.url) currentObj.webhookURL = newObj.webhookURL}
+  if ("webhookURL" in newObj) {
+    if (newObj.webhookURL.url.length>0) currentObj.webhookURL = newObj.webhookURL
+    else {
+      currentObj.webhookURL.formSubmission = newObj.webhookURL.formSubmission
+      currentObj.webhookURL.clickData = newObj.webhookURL.clickData
+    }
+  }
+  
   
   var displayOnce = true
 
@@ -399,6 +410,7 @@ function popUpDisplayer() {
       }, popSecond * 1000)
     }
     else setTimeout(() => { popUpDisplayer() }, 300)
+
   }
   let langArray = getBrowserLanguageAsArray(currentObj.browserLanguages)
   let userLanguage = getLanguage()
